@@ -1,0 +1,16 @@
+{
+    "name": "lox/regreph",
+    "description": "A test framework for measuring performance regressions",
+    "keywords": ["php", "performance", "xhprof", "99designs"],
+    "license": "MIT",
+    "authors": [
+        { "name": "Lachlan Donald", "email": "lachlan@ljd.cc" }
+    ],
+    "require": {
+      "php": ">=5.3.2",
+      "facebook/xhprof" : "dev-master"
+    },
+    "autoload": {
+      "psr-0": { "Regreph": ["lib"] }
+    }
+}

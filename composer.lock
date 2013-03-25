@@ -1,0 +1,46 @@
+{
+    "hash": "7ec589f4d0089eff901dac435a1ca34c",
+    "packages": [
+        {
+            "name": "facebook/xhprof",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/xhprof.git",
+                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/xhprof/zipball/c93037e4c50b4b7f28f8dd856d85756814ad7daa",
+                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "xhprof_lib/utils/xhprof_lib.php",
+                    "xhprof_lib/utils/xhprof_runs.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "XHProf: A Hierarchical Profiler for PHP",
+            "time": "2013-02-06 17:42:37"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "facebook/xhprof": 20
+    },
+    "platform": {
+        "php": ">=5.3.2"
+    },
+    "platform-dev": [
+
+    ]
+}
