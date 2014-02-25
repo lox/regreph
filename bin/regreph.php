@@ -4,19 +4,6 @@
  * regreph.php <testfile> <dir> <revspec>
  */
 
-function get_git_commits($dir, $from, $to)
-{
-    $commits = array();
-    $cmd = "cd {$dir}; git log --pretty=oneline {$from}...{$to}";
-
-    foreach(explode("\n", trim(`$cmd`)) as $line) {
-        list($sha1, $descr) = explode(' ', $line, 2);
-        $commits[$sha1] = $descr;
-    }
-
-    return $commits;
-}
-
 function get_commit_log($dir, $sha1)
 {
     $cmd = trim("cd {$dir}; git show {$sha1} --pretty=oneline| head -n1");
