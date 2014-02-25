@@ -1,7 +1,8 @@
+#!/usr/bin/env php
 <?php
 
 /**
- * bench.php <testcase> <dir>
+ * ./bench <testcase> <dir>
  */
 
 require_once(__DIR__.'/../vendor/autoload.php');

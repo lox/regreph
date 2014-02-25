@@ -1,7 +1,8 @@
+#!/usr/bin/env php
 <?php
 
 /**
- * regreph.php <testfile> <dir> <revspec>
+ * ./regreph <testfile> <dir> <revspec>
  */
 
 function get_git_commits($dir, $from, $to)

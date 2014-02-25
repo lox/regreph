@@ -12,5 +12,9 @@
     },
     "autoload": {
       "psr-0": { "Regreph": ["lib"] }
-    }
+    },
+    "bin": [
+      "bin/bench",
+      "bin/regreph"
+    ]
 }
