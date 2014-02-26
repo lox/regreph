@@ -14,7 +14,7 @@ Running
 -------
 
 ```bash
-php bin/regreph.php <testfile> <projectdir> <refspec>
+bin/regreph <testfile> <projectdir> <refspec>
 ```
 
 An example test file is https://gist.github.com/lox/33ab5a91edfaf487acf9
