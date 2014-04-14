@@ -7,7 +7,7 @@
 
 function get_commit_log($dir, $sha1)
 {
-    $cmd = trim("cd {$dir}; git show {$sha1} --pretty=oneline| head -n1");
+    $cmd = trim("git -C {$dir} show {$sha1} --pretty=oneline| head -n1");
     list($sha1, $descr) = explode(' ', trim(`$cmd`), 2);
 
     return $descr;
@@ -21,7 +21,7 @@ function get_working_dir($dir, $sha1)
     if(!is_dir($tmpdir)) {
         `git clone -l {$dir} {$tmpdir}`;
     } else {
-        `cd $tmpdir; git fetch; git reset --hard {$sha1}`;
+        `git -C {$tmpdir} fetch; git -C {$tmpdir} reset --hard {$sha1}`;
     }
 
     // update composer
