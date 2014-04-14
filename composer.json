@@ -11,7 +11,9 @@
       "facebook/xhprof" : "dev-master"
     },
     "autoload": {
-      "psr-0": { "Regreph": ["lib"] }
+      "psr-4": {
+        "Regreph\\": "lib"
+      }
     },
     "bin": [
       "bin/bench",
