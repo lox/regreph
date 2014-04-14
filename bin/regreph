@@ -19,7 +19,7 @@ function get_working_dir($dir, $sha1)
 
     // pull down recent git changes
     if(!is_dir($tmpdir)) {
-        `git clone -l {$dir} {$tmpdir}`;
+        `git clone --local {$dir} {$tmpdir}`;
     } else {
         `git -C {$tmpdir} fetch; git -C {$tmpdir} reset --hard {$sha1}`;
     }
