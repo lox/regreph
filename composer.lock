@@ -1,5 +1,9 @@
 {
-    "hash": "7ec589f4d0089eff901dac435a1ca34c",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "5ef4e174b63b0e132299186e2c1f5da3",
     "packages": [
         {
             "name": "facebook/xhprof",
@@ -7,13 +11,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/xhprof.git",
-                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa"
+                "reference": "e83d1792569ecbc5ef14c50a00eb37094d4e6ad9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/xhprof/zipball/c93037e4c50b4b7f28f8dd856d85756814ad7daa",
-                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa",
+                "url": "https://api.github.com/repos/facebook/xhprof/zipball/e83d1792569ecbc5ef14c50a00eb37094d4e6ad9",
+                "reference": "e83d1792569ecbc5ef14c50a00eb37094d4e6ad9",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
             },
             "type": "library",
             "autoload": {
@@ -23,8 +30,71 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
             "description": "XHProf: A Hierarchical Profiler for PHP",
-            "time": "2013-02-06 17:42:37"
+            "homepage": "http://pecl.php.net/package/xhprof",
+            "keywords": [
+                "performance",
+                "profiling"
+            ],
+            "time": "2014-04-14 20:23:48"
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.4.3",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ef20f1f58d7f693ee888353962bd2db336e3bbcb",
+                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/event-dispatcher": "~2.1"
+            },
+            "suggest": {
+                "symfony/event-dispatcher": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-03-01 17:35:04"
         }
     ],
     "packages-dev": [

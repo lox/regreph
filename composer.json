@@ -8,7 +8,8 @@
     ],
     "require": {
       "php": ">=5.3.2",
-      "facebook/xhprof" : "dev-master"
+      "facebook/xhprof" : "dev-master",
+      "symfony/console": "~2.4.3"
     },
     "autoload": {
       "psr-4": {
