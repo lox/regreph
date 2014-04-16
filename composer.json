@@ -13,11 +13,11 @@
     },
     "autoload": {
       "psr-4": {
-        "Regreph\\": "lib"
+        "Regreph\\": "lib",
+        "Regreph\\Console\\Command\\": "lib/Command"
       }
     },
     "bin": [
-      "bin/bench",
       "bin/regreph"
     ]
 }
