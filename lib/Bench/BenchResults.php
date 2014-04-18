@@ -46,13 +46,6 @@ class BenchResults
         return $this;
     }
 
-    public function setResults(array $results)
-    {
-        $this->results = $results;
-
-        return $this;
-    }
-
     public function toArray()
     {
         $results = $this->getResults();

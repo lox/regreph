@@ -15,19 +15,12 @@ class Bench
 
     public function __construct(array $testCases)
     {
-        $this->setTestCases($testCases);
+        $this->testCases = $testCases;
     }
 
     public function getTestCases()
     {
         return $this->testCases;
-    }
-
-    public function setTestCases($testCases)
-    {
-        $this->testCases = $testCases;
-
-        return $this;
     }
 
     public function getResults()

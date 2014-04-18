@@ -14,21 +14,14 @@ class BenchFile
 
     public function __construct($file)
     {
-        $this->setFile($file);
+        $this->file = $file;
+        $this->tests = TestCaseFinder::fromFile($this->file);
+        $this->bench = $bench = new Bench($this->tests);
     }
 
     public function getFile()
     {
         return $file;
-    }
-
-    public function setFile($file)
-    {
-        $this->file = $file;
-        $this->tests = TestCaseFinder::fromFile($this->file);
-        $this->bench = $bench = new Bench($this->tests);
-
-        return $this;
     }
 
     public function getTests()
