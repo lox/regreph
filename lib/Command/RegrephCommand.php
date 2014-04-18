@@ -15,6 +15,12 @@ use xhprof_compute_flat_info;
 
 class RegrephCommand extends Command
 {
+    const EXIT_SUCCESS = 0;
+
+    const EXIT_REGRESS_CPU = 1;
+
+    const EXIT_REGRESS_MEMORY = 2;
+
     protected function configure()
     {
         $this
@@ -92,18 +98,15 @@ class RegrephCommand extends Command
         $this->print_table_row($row);
 
         // handle exit status
-
-        $exitCode = 0;
-
         if (($totals1['cpu'] - $totals2['cpu']) > 0.05) {
-            printf("\n\033[31mFAIL!\033[37m CPU TIME regression\n");
-            $exitCode = 1;
+            $output->writeln('<error>FAIL</error> CPU TIME regression');
+            return static::EXIT_REGRESS_CPU;
         } else if (($totals1['mu'] - $totals2['mu']) > 0.05) {
-            printf("\n\033[31mFAIL!\033[37m MEMORY regression\n");
-            $exitCode = 2;
+            $output->writeln('<error>FAIL</error> MEMORY regression');
+            return static::EXIT_REGRESS_MEMORY;
         }
 
-        exit($exitCode);
+        return EXIT_SUCCESS;
     }
 
     private function get_commit_log($dir, $sha1)
