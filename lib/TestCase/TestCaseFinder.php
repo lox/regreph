@@ -1,6 +1,6 @@
 <?php
 
-namespace Regreph;
+namespace Regreph\TestCase;
 
 class TestCaseFinder
 {
@@ -12,12 +12,12 @@ class TestCaseFinder
         $loaded = array_diff($after, $before);
 
         // find any performance tests
-        $tests = array_filter($loaded, function($c) {
-            return is_subclass_of($c, '\Regreph\TestCase', true);
+        $tests = array_filter($loaded, function($className) {
+            return is_subclass_of($className, '\Regreph\TestCase\TestCase', true);
         });
 
-        foreach($tests as $idx=>$test) {
-            $tests[$idx] = new $test();
+        foreach($tests as $idx => $className) {
+            $tests[$idx] = new $className();
         }
 
         return $tests;
