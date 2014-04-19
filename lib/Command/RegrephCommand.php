@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\TableHelper;
 use Regreph\Bench\Bench;
 use Regreph\Bench\BenchFile;
 use Regreph\Bench\BenchResults;
@@ -51,45 +52,54 @@ class RegrephCommand extends Command
         $tmpdir = $this->get_working_dir($dir, $refspec);
         $results = $this->benchmark($testfile, $tmpdir);
         $this->print_results($results);
+
+        $table = $this->getHelperSet()->get('table');
+
+        $table
+            ->setPadType(STR_PAD_LEFT)
+            ->setHeaders(array(
+                'Profile',
+                'Run ID',
+                'Calls count',
+                'Wall time',
+                'CPU time',
+                'Memory'
+            ));
+
+        $this->addRows($table, $results);
+
         $baseline = $results;
 
         printf("\nTesting working dir (%s)\n", $dir);
         $results = $this->benchmark($testfile, $dir);
         $this->print_results($results, $baseline);
+        $this->addRows($table, $results, $baseline);
 
-        printf("\nCompare results at http://localhost:8000/?run1=%s&run2=%s&source=".Bench::ROLLUP_KEY."\n",
-            $baseline->getRollUp(), $results->getRollUp());
+        $output->writeln(sprintf(
+            "Compare results at http://localhost:8000/?run1=%s&run2=%s&source=".Bench::ROLLUP_KEY,
+            $baseline->getRollUp(),
+            $results->getRollUp()
+        ));
 
         $diskRuns = new XHProfRuns_Default();
 
         $totals1 = array();
         $totals2 = array();
-        $display_calls = true;
 
-        $run1 = xhprof_compute_flat_info($diskRuns->get_run($results->getRollUp(), Bench::ROLLUP_KEY, $desc1), $totals1);
-        $run2 = xhprof_compute_flat_info($diskRuns->get_run($baseline->getRollUp(), Bench::ROLLUP_KEY, $desc2), $totals2);
+        xhprof_compute_flat_info($diskRuns->get_run($results->getRollUp(), Bench::ROLLUP_KEY, $desc1), $totals1);
+        xhprof_compute_flat_info($diskRuns->get_run($baseline->getRollUp(), Bench::ROLLUP_KEY, $desc2), $totals2);
 
-        $row = array(
-            'calls' => array(
-                'value' => number_format(($totals1['ct'] - $totals2['ct'])),
-                'delta' => $this->format_delta($totals1['ct'], $totals2['ct'], true),
-            ),
-            'wall time' => array(
-                'value' => number_format(($totals1['wt'] - $totals2['wt']) / 1000, 3).'ms',
-                'delta' => $this->format_delta($totals1['wt'], $totals2['wt'], true),
-            ),
-            'cpu time' => array(
-                'value' => number_format(($totals1['cpu'] - $totals2['cpu']) / 1000, 3).'ms',
-                'delta' => $this->format_delta($totals1['cpu'], $totals2['cpu'], true),
-            ),
-            'memory' => array(
-                'value' => number_format(($totals1['mu'] - $totals2['mu']) / 1024, 3).'k',
-                'delta' => $this->format_delta($totals1['mu'], $totals2['mu'], true),
-            ),
-        );
+        $table
+            ->addRow(array(
+                'Summary',
+                '',
+                $this->format_delta($totals1['ct'], $totals2['ct']).' '.str_pad(number_format(($totals1['ct'] - $totals2['ct'])), 5, ' ', STR_PAD_LEFT),
+                $this->format_delta($totals1['wt'], $totals2['wt']).' '.str_pad(number_format(($totals1['wt'] - $totals2['wt'])).'ms', 5, ' ', STR_PAD_LEFT),
+                $this->format_delta($totals1['cpu'], $totals2['cpu']).' '.str_pad(number_format(($totals1['cpu'] - $totals2['cpu'])).'ms', 5, ' ', STR_PAD_LEFT),
+                $this->format_delta($totals1['mu'], $totals2['mu']).' '.str_pad(number_format(($totals1['mu'] - $totals2['mu'])).'k', 5, ' ', STR_PAD_LEFT),
+            ));
 
-        printf("%-42s", "Summary");
-        $this->print_table_row($row);
+        $table->render($output);
 
         // handle exit status
 
@@ -131,98 +141,66 @@ class RegrephCommand extends Command
         return $tmpdir;
     }
 
-    private function print_results(
+    private function addRows(
+        TableHelper $table,
         BenchResults $results,
         BenchResults $lastResults = null
     ) {
         foreach ($results->getResults() as $method => $data) {
 
             $totals = $data->totals;
-            $row = array(
-                'calls'     => array(
-                    'value' => number_format($totals['ct']),
-                    'delta'=>'',
-                ),
-                'wall time' => array(
-                    'value' => number_format($totals['wt'] / 1000, 3).'ms',
-                    'delta'=>'',
-                ),
-                'cpu time'  => array(
-                    'value' => number_format($totals['cpu'] / 1000, 3).'ms',
-                    'delta'=>'',
-                ),
-                'memory'    => array(
-                    'value' => number_format($totals['mu'] / 1024, 3).'k',
-                    'delta'=>'',
-                ),
-            );
 
-            if ($last) {
-                $lastMethods = $last->getResults();
+            $callsCount = str_pad(number_format($totals['ct']), 5, ' ', STR_PAD_LEFT);
+            $wallTime   = str_pad(number_format($totals['wt'] / 1000, 3).'ms', 5, ' ', STR_PAD_LEFT);
+            $cpuTime    = str_pad(number_format($totals['cpu'] / 1000, 3).'ms', 5, ' ', STR_PAD_LEFT);
+            $memory     = str_pad(number_format($totals['mu'] / 1024, 3).'k', 5, ' ', STR_PAD_LEFT);
+
+            if ($lastResults) {
+                $lastMethods = $lastResults->getResults();
                 $lastTotals = $lastMethods[$method]->totals;
 
-                $row['calls']['delta'] = $this->format_delta(
-                    $totals['ct'],
-                    $lastTotals['ct'],
-                    true
-                );
-                $row['wall time']['delta'] = $this->format_delta(
-                    $totals['wt'],
-                    $lastTotals['wt'],
-                    true
-                );
-                $row['cpu time']['delta'] = $this->format_delta(
-                    $totals['cpu'],
-                    $lastTotals['cpu'],
-                    true
-                );
-                $row['memory']['delta'] = $this->format_delta(
-                    $totals['mu'],
-                    $lastTotals['mu'],
-                    true
-                );
+                $callsCount = $this->format_delta($totals['ct'], $lastTotals['ct']).' '.$callsCount;
+                $wallTime = $this->format_delta($totals['wt'], $lastTotals['wt']).' '.$wallTime;
+                $cpuTime = $this->format_delta($totals['cpu'], $lastTotals['cpu']).' '.$cpuTime;
+                $memory = $this->format_delta($totals['mu'], $lastTotals['mu']).' '.$memory;
             }
 
-            printf("%-20s | run %-15s", $method, $data->runId);
-            $this->print_table_row($row);
+            $table->addRow(array(
+                $method,
+                $data->runId,
+                $callsCount,
+                $wallTime,
+                $cpuTime,
+                $memory
+            ));
         }
     }
 
-    private function print_table_row($row)
+    private function format_delta($num1, $num2)
     {
-        foreach($row as $cell=>$data) {
-            printf(" | %s%s%10s", $cell, $this->pad_ansi_text($data['delta'], 10), $data['value']);
+        if ($num2 !== 0) {
+            $delta = ($num1 - $num2) / $num2;
+        } elseif ($num1 === 0) {
+            $delta = 0;
+        } else {
+            $delta = 1;
         }
-
-        printf("\n");
-    }
-
-    private function pad_ansi_text($text, $width)
-    {
-        $visibleText = preg_replace("/\033\[\d+m(.+?)\033\[37m/",'\1', $text);
-        $spaces = ($width-strlen($visibleText) > 0) ? str_repeat(' ', $width-strlen($visibleText)) : '';
-
-        return $spaces.$text;
-    }
-
-    private function format_delta($num1, $num2, $positive = true, $pad = 5)
-    {
-        $delta = ($num1 - $num2) / $num2;
-        $format = '%4s';
 
         if ($delta > 0) {
             $sign = '+';
-        } else if($delta < 0) {
+        } elseif($delta < 0) {
             $sign = '-';
         }
 
-        if (($positive && $sign == '+') || (!$positive && $sign == '-')) {
-            $format = "\033[31m{$format}\033[37m";
+        $deltaString = str_pad($sign.number_format(abs($delta * 100), 1).'%', 5, ' ', STR_PAD_LEFT);
+
+        if ($sign == '+') {
+            $deltaString = "<error>{$deltaString}</error>";
         } else {
-            $format = "\033[32m{$format}\033[37m";
+            $deltaString = "<info>{$deltaString}</info>";
         }
 
-        return $this->pad_ansi_text(sprintf($format, $sign.number_format(abs($delta * 100), 1).'%'), $pad);
+        return $deltaString;
     }
 
     /**
