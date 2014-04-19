@@ -1,6 +1,6 @@
 <?php
 
-namespace Regreph\Console\Command;
+namespace Regreph\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

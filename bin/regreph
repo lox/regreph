@@ -9,8 +9,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 // Use needed classes and commands to load into the Regreph console application
 use Symfony\Component\Console\Application;
-use Regreph\Console\Command\RegrephCommand;
-use Regreph\Console\Command\BenchCommand;
+use Regreph\Command\RegrephCommand;
+use Regreph\Command\BenchCommand;
 
 // Create a new Console Application instance
 $application = new Application();
